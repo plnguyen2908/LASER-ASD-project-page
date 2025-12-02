@@ -164,7 +164,7 @@
 			</table>
 			<div>(<strong>*</strong> <i>Equal Contribution</i>)</div>
 			<center><span style="font-size:24px">University of Wisconsin - Madison</center>
-			<table align=center width=250px>
+			<table align=center width=420px>
 				<tr>
 					<td align=center width=120px>
 						<center>
@@ -176,27 +176,43 @@
 							<span style="font-size:24px"><a href='https://github.com/plnguyen2908/LASER_ASD'>[GitHub]</a></span><br>
 						</center>
 					</td>
+					<td align=center width=180px>
+						<center>
+							<span style="font-size:24px"><a href='https://huggingface.co/datasets/plnguyen2908/LASER-bench/tree/main'>[LASER-bench]</a></span><br>
+						</center>
+					</td>
 				</tr>
 			</table>
 		</table>
 	</center>
 
 	<center>
+		<div class="disclaimerbox" style="width:850px; text-align:left;">
+			<strong>TL;DR.</strong> We came up with LASER, a method that integrates lip cues into ASD models, and curated a benchmark to test ASD models under noisy scenarios called LASER-bench.
+		</div>
+	</center>
+	<br>
+	<center>
 		<table align=center width=850px>
 			<tr>
-				<td width=260px>
-					<center>
-						<img class="round" style="width:900px" src="./resources/teaser.png"/>
-					</center>
+				<td align=center width=425px>
+					<video style="width:400px; border: 1px solid black; border-radius: 10px;" controls loop muted>
+						<source src="./resources/viz_ours_clip_01_32_01_40.mp4" type="video/mp4">
+					</video>
+					<div><strong>LASER (ours)</strong></div>
+				</td>
+				<td align=center width=425px>
+					<video style="width:400px; border: 1px solid black; border-radius: 10px;" controls loop muted>
+						<source src="./viz_loconet_clip_01_32_01_40.mp4" type="video/mp4">
+					</video>
+					<div><strong>LoCoNet baseline</strong></div>
 				</td>
 			</tr>
 		</table>
 		<table align=center width=850px>
 			<tr>
 				<td>
-					<strong>Qualitative results of LASER, <a href="https://arxiv.org/abs/2309.12306">TalkNCE</a>, <a href="https://arxiv.org/abs/2301.08237">LoCoNet</a> on two unsynchronized videos</strong>. We create non-speaking scenarios by
-swapping the audio tracks of two videos where the same person is speaking with similar camera angles. The <span class="red">red</span> box means the model
-predicts not-speaking. The <span class="green">green</span> box means the model predicts speaking. The <span class="orange">yellow</span> circle means the model makes a wrong prediction.
+					<strong>Comparison on a challenging clip.</strong> The man on the left is not predicted correctly by the LoCoNet model, but LASER detects him, showing how lip-aware training fixes missed speakers under noisy, unsynchronized conditions.
 				</td>
 			</tr>
 		</table>
@@ -208,25 +224,178 @@ predicts not-speaking. The <span class="green">green</span> box means the model 
 		<center><h1>Abstract</h1></center>
 		<tr>
 			<td>
-				Active Speaker Detection (ASD) aims to identify speaking individuals in complex visual scenes. 
-				While humans can easily detect speech by matching lip movements to audio, <strong class = "red">current ASD models 
-				struggle to establish this correspondence</strong>, often misclassifying non-speaking instances when audio 
-				and lip movements are unsynchronized. To address this limitation, we propose <strong class="blue">Lip landmark Assisted Speaker 
-				dEtection for Robustness (LASER)</strong>. Unlike models that rely solely on facial frames, LASER explicitly focuses
-				 on lip movements by <strong class="blue">integrating lip landmarks in training</strong>. Specifically, given a face track, LASER extracts 
-				 frame-level visual features and the 2D coordinates of lip landmarks using a lightweight detector. 
-				 These coordinates are encoded into dense feature maps, providing spatial and structural information 
-				 on lip positions. Recognizing that landmark detectors may sometimes fail under challenging conditions 
-				 (e.g., low resolution, occlusions, extreme angles), we incorporate an <strong class="blue">auxiliary consistency loss</strong>  to align 
-				 predictions from both lip-aware and face-only features, <strong class="green">ensuring reliable performance even when lip data 
-				 is absent</strong>. Extensive experiments across multiple datasets show that LASER outperforms state-of-the-art models, 
-				 especially in scenarios with desynchronized audio and visuals, <strong class = "green">demonstrating robust performance in real-world video contexts</strong>.
+				Active Speaker Detection (ASD) aims to identify who is speaking in complex visual scenes. While humans naturally rely on lip-audio synchronization, existing ASD models often misclassify non-speaking instances when lip movements and audio are unsynchronized. To address this, we propose Lip landmark Assisted Speaker dEtection for Robustness (LASER), which explicitly incorporates lip landmarks during training to guide the model’s attention to speech-relevant regions. Given a face track, LASER extracts visual features and encodes 2D lip landmarks into dense maps. To handle failure cases such as low resolution or occlusion, we introduce an auxiliary consistency loss that aligns lip-aware and face-only predictions, removing the need for landmark detectors at test time. LASER outperforms state-of-the-art models across both in-domain and out-of-domain benchmarks. To further evaluate robustness in realistic conditions, we introduce LASER-bench, a curated dataset of modern video clips with varying levels of background noise. On the high-noise subset, LASER improves mAP by 3.3 and 4.3 points over LoCoNet and TalkNet, respectively, demonstrating strong resilience to real-world acoustic challenges.
 			</td>
 		</tr>
 	</table>
-	<br>
-
 	<hr>
+	<center><h1>LASER-bench and Results</h1></center>
+	<table align=center width=850px>
+		<tr>
+			<td>
+				We compare LASER-bench with existing ASD benchmarks and summarize the main quantitative highlights reported in the paper.
+			</td>
+		</tr>
+	</table>
+	<table align=center width=850px style="border-collapse:collapse;" border="1" cellpadding="8" cellspacing="0">
+		<tr>
+			<th>Benchmark</th>
+			<th>Total Face Tracks</th>
+			<th>Total Face Crops</th>
+			<th>Notes</th>
+		</tr>
+		<tr>
+			<td>AVA-Val</td>
+			<td>8K</td>
+			<td>760K</td>
+			<td>Only movies</td>
+		</tr>
+		<tr>
+			<td>Talkies-Val</td>
+			<td>6.8K</td>
+			<td>235K</td>
+			<td>Natural dialog clips</td>
+		</tr>
+		<tr>
+			<td>ASW-Val</td>
+			<td>3.5K</td>
+			<td>171K</td>
+			<td>Only news background noise</td>
+		</tr>
+		<tr>
+			<td><strong>LASER-bench (ours)</strong></td>
+			<td><strong>4.9K</strong></td>
+			<td><strong>738K</strong></td>
+			<td><strong>Curated with varying background noise</strong></td>
+		</tr>
+	</table>
+	<table align=center width=850px>
+		<tr>
+			<td><span style="font-size:14px;">Table 1. Dataset comparison.</span></td>
+		</tr>
+	</table>
+	<br>
+	<table align=center width=850px>
+		<tr>
+			<td>
+				<strong>Table 3 (main highlight).</strong> LASER improves robustness on noisy scenarios in LASER-bench.
+			</td>
+		</tr>
+	</table>
+	<table align=center width=850px style="border-collapse:collapse;" border="1" cellpadding="8" cellspacing="0">
+		<tr>
+			<th>Model</th>
+			<th>Low Noise mAP</th>
+			<th>High Noise mAP</th>
+		</tr>
+		<tr>
+			<td>TalkNet</td>
+			<td>94.8</td>
+			<td>77.8</td>
+		</tr>
+		<tr>
+			<td><strong>TalkNet + LASER</strong></td>
+			<td><strong>95.0</strong></td>
+			<td><strong>82.1</strong></td>
+		</tr>
+		<tr>
+			<td>LoCoNet</td>
+			<td>96.2</td>
+			<td>86.7</td>
+		</tr>
+		<tr>
+			<td><strong>LoCoNet + LASER</strong></td>
+			<td><strong>96.4</strong></td>
+			<td><strong>90.0</strong></td>
+		</tr>
+	</table>
+	<table align=center width=850px>
+		<tr>
+			<td><span style="font-size:14px;">LASER boosts performance, with the largest gains under high background noise.</span></td>
+		</tr>
+	</table>
+	<br>
+	<table align=center width=850px>
+		<tr>
+			<td>
+				<strong>Table 2.</strong> LASER consistently improves models on in-domain (A V A) and out-of-domain (Talkies, ASW) evaluations.
+			</td>
+		</tr>
+	</table>
+	<table align=center width=850px style="border-collapse:collapse;" border="1" cellpadding="8" cellspacing="0">
+		<tr>
+			<th>Model</th>
+			<th>A V A</th>
+			<th>Talkies</th>
+			<th>ASW</th>
+		</tr>
+		<tr>
+			<td>EASEE</td>
+			<td>94.1</td>
+			<td>86.7</td>
+			<td>-</td>
+		</tr>
+		<tr>
+			<td>MAAS</td>
+			<td>88.8</td>
+			<td>79.7</td>
+			<td>-</td>
+		</tr>
+		<tr>
+			<td>TalkNet<span style="font-size:12px;">&dagger;</span></td>
+			<td>92.2</td>
+			<td>85.9</td>
+			<td>85.8</td>
+		</tr>
+		<tr>
+			<td><strong>TalkNet + LASER</strong></td>
+			<td><strong>92.5</strong></td>
+			<td><strong>87.6</strong></td>
+			<td><strong>86.6</strong></td>
+		</tr>
+		<tr>
+			<td>Light-ASD<span style="font-size:12px;">&dagger;</span></td>
+			<td>93.5</td>
+			<td>87.6</td>
+			<td>87.4</td>
+		</tr>
+		<tr>
+			<td><strong>Light-ASD + LASER</strong></td>
+			<td><strong>93.8</strong></td>
+			<td><strong>88.1</strong></td>
+			<td><strong>87.6</strong></td>
+		</tr>
+		<tr>
+			<td>LoCoNet<span style="font-size:12px;">&dagger;</span></td>
+			<td>95.2</td>
+			<td>88.4</td>
+			<td>88.4</td>
+		</tr>
+		<tr>
+			<td><strong>LoCoNet + LASER</strong></td>
+			<td><strong>95.3</strong></td>
+			<td><strong>89.0</strong></td>
+			<td><strong>88.9</strong></td>
+		</tr>
+		<tr>
+			<td>LoCoNet w/ CL<span style="font-size:12px;">&dagger;</span></td>
+			<td>95.5</td>
+			<td>88.3</td>
+			<td>88.5</td>
+		</tr>
+		<tr>
+			<td><strong>LoCoNet w/ CL + LASER</strong></td>
+			<td><strong>95.4</strong></td>
+			<td><strong>89.7</strong></td>
+			<td><strong>89.5</strong></td>
+		</tr>
+	</table>
+	<table align=center width=850px>
+		<tr>
+			<td><span style="font-size:14px;">Out-of-domain columns are Talkies and ASW; LASER lifts every model across both settings.</span></td>
+		</tr>
+	</table>
+	<br>
 	<center><h1>Our Method</h1></center>
 
 	<table align=center width=420px>
@@ -250,101 +419,51 @@ predicts not-speaking. The <span class="green">green</span> box means the model 
 		<center>
 			<tr>
 				<td>
-					<ol>
-						<li>Given a face track V, we first obtain a lip landmark track using a facial landmark detector and encode
-		the 2D coordinates of these landmarks into continuous 2D feature maps.</li>
-						<li>These maps are then aggregated through a 1x1 convolution layer.</li>
-						<li>The encoded lip track is concatenated with visual features from a 3D CNN and fed into ResNet and V-TCN to capture a temporal visual
-		representation, which is further processed by context modeling modules to produce the final prediction.</li>
-					</ol>
-					
-		 For illustration, we use Long-term
-		Intra-speaker Modeling (LIM) and Short-term Inter-speaker Modeling (SIM) from <a href="https://arxiv.org/abs/2301.08237">LoCoNet</a>; however, our LASER is not limited to
-		<a href="https://arxiv.org/abs/2301.08237">LoCoNet</a> and can be integrated with other models.
+					Given a face track, we obtain a lip landmark track with a facial landmark detector and encode the 2D coordinates into continuous 2D feature maps, aggregated via a 1x1 convolution. The encoded lip track is concatenated with 3D-CNN visual features and passed through ResNet and V-TCN for temporal representation, followed by context modeling modules to produce the final prediction. A consistency loss between predictions with and without lip landmark encoding (gradients only through the lip-free path) makes the model robust to missing lip landmarks at test time.
 				</td>
 			</tr>
 		</center>
 	</table>
 	<hr>
-	<center><h1>Results on unsynchronized videos</h1></center>
-	<center>
-	<img src="resources/result.png" width="900px"></center>
-	<table align="center" width="850px">
-		<tr><td>We trained both <a href="https://arxiv.org/abs/2301.08237">LoCoNet</a> and LASER on the synchronized version of
-			<a href="https://arxiv.org/abs/1901.01342">AVA Active Speaker Detection dataset</a> and evalute both of them on the 
-			unsynchronized version of <a href="https://arxiv.org/abs/1901.01342">AVA</a>, 
-			<a href="https://openaccess.thecvf.com/content/ICCV2021/papers/Alcazar_MAAS_Multi-Modal_Assignation_for_Active_Speaker_Detection_ICCV_2021_paper.pdf">Talkies</a> ,
-			and <a href="https://arxiv.org/abs/2108.07640">ASW</a> as OOD evaluation.
-		</td></tr>
-	</table>
-
-	<!-- <table align=center width=800px>
-		<br>
-		<tr>
-			<center>
-				<span style="font-size:28px"><a href=''>[Slides]</a>
-				</span>
-			</center>	
-		</tr>
-	</table>
-	<hr> -->
-
-	<!-- <table align=center width=800px>
-		<br>
-		<tr><center>
-			<span style="font-size:28px">&nbsp;<a href='https://github.com/richzhang/webpage-template'>[GitHub]</a>
-			</center>
-		</span>
-	</table>
-	<br> -->
-	<!-- <hr>
-	<table align=center width=850px>
+	<table align=center width=450px>
 		<center><h1>Paper and Supplementary Material</h1></center>
 		<tr>
-			<td><a href=""><img style="height:175px" src="./resources/method_diagram.png"/></a></td>
-			<td><span style="font-size:14pt">F. Author, S. Author, T. Author.<br>
-				<b>LASER: Lip Landmark Assisted Speaker Detection for Robustness</b><br>
-				arXiv, 2024.<br>
-				(hosted on <a href="">ArXiv</a>)<br>
-				(<a href="./resources/camera-ready.pdf">camera ready</a>)<br>
+			<td><a href="https://arxiv.org/abs/2501.11899"><img class="layered-paper-big" style="height:175px" src="./resources/paper.png"/></a></td>
+			<td><span style="font-size:14pt">Le Thien Phuc Nguyen, Zhuoran Yu, Yong Jae Lee<br>
+				<b>LASER: Lip Landmark Assisted Speaker Detection for Robustness.</b><br>
+				Preprint, 2025.<br>
+				(hosted on <a href="https://arxiv.org/abs/2501.11899">arXiv:2501.11899</a>)<br>
+				<!-- (<a href="./resources/camera-ready.pdf">camera ready</a>)<br> -->
 				<span style="font-size:4pt"><a href=""><br></a>
 				</span>
 			</td>
 		</tr>
 	</table>
-	<br> -->
+	<br>
 
-	<hr>
-
-	<table align="center" width="850px">
-		<tr><td><center><h1>Bibtex</h1></center></td></tr>
-		<tr><td>
-			
-		</td></tr>
-	</table>
-<!-- 
 	<table align=center width=600px>
 		<tr>
 			<td><span style="font-size:14pt"><center>
 				<a href="./resources/bibtex.txt">[Bibtex]</a>
 			</center></td>
 		</tr>
-	</table> -->
-
-	<table   width="800px">
-		<pre width="800px">
-	<code>
-		@misc{nguyen2025laserliplandmarkassisted,
-			title={LASER: Lip Landmark Assisted Speaker Detection for Robustness}, 
-			author={Le Thien Phuc Nguyen and Zhuoran Yu and Yong Jae Lee},
-			year={2025},
-			eprint={2501.11899},
-			archivePrefix={arXiv},
-			primaryClass={cs.CV},
-			url={https://arxiv.org/abs/2501.11899}, 
-		}
-	</code>
-	</pre>
+	</table>
+	<table align=center width=850px>
+		<tr>
+			<td>
+<pre style="font-size:12px; line-height:1.2; background:#f7f7f7; padding:10px; border:1px solid #ddd; border-radius:6px; overflow-x:auto;">
+@misc{nguyen2025laserliplandmarkassisted,
+      title={LASER: Lip Landmark Assisted Speaker Detection for Robustness}, 
+      author={Le Thien Phuc Nguyen and Zhuoran Yu and Yong Jae Lee},
+      year={2025},
+      eprint={2501.11899},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2501.11899}, 
+}
+</pre>
+			</td>
+		</tr>
 	</table>
 	
 	<hr>
@@ -358,7 +477,7 @@ predicts not-speaking. The <span class="green">green</span> box means the model 
 					We want to thanks University of Wisconsin - Madison for providing gpu resources. Thank you 
 					<a href="https://utkarshojha.github.io/">Utkarsh Ojha</a> for proofreading our paper. Many thanks to the LoConet's author 
 					<a href="https://scholar.google.com/citations?user=XjXaEOYAAAAJ&hl=en">Xizi Wang</a> and 
-					TalkNCE's author <a href="https://scholar.google.com/citations?user=LooPec8AAAAJ&hl=en">Chaeyoung Jung</a> for supports and answering related questions. This template was originally made 
+					TalkNCE's author <a href="https://cyongong.github.io/">Chaeyoung Jung</a> for supports and answering related questions. This template was originally made 
 					by <a href="http://web.mit.edu/phillipi/">Phillip Isola</a> and <a href="http://richzhang.github.io/">Richard Zhang</a> for a <a href="http://richzhang.github.io/colorization/">colorful</a> ECCV project; the code can be found <a href="https://github.com/richzhang/webpage-template">here</a>.
 				</left>
 			</td>
@@ -368,4 +487,3 @@ predicts not-speaking. The <span class="green">green</span> box means the model 
 <br>
 </body>
 </html>
-
